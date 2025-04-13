@@ -5,6 +5,7 @@ import id.my.hendisantika.rbac.repository.PermissionRepository;
 import id.my.hendisantika.rbac.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,5 +38,16 @@ public class RoleService {
 
     public Optional<Role> getRoleByName(String name) {
         return roleRepository.findByName(name);
+    }
+
+    @Transactional
+    public Role createRole(String name) {
+        if (roleRepository.findByName(name).isPresent()) {
+            throw new RuntimeException("Role with name " + name + " already exists");
+        }
+
+        Role role = new Role();
+        role.setName(name);
+        return roleRepository.save(role);
     }
 }
