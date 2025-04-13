@@ -6,6 +6,7 @@ import id.my.hendisantika.rbac.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,4 +53,15 @@ public class AdminController {
         }
     }
 
+    @DeleteMapping("/users/{userId}/roles/{roleName}")
+    public ResponseEntity<?> removeRoleFromUser(@PathVariable Long userId, @PathVariable String roleName) {
+        try {
+            User user = userService.getUserById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+            userService.unassignRoleFromUser(user.getUsername(), roleName);
+            return ResponseEntity.ok("Role removed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
