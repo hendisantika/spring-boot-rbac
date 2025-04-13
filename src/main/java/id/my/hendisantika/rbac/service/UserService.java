@@ -86,4 +86,9 @@ public class UserService {
         user.getRoles().remove(role);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 }
