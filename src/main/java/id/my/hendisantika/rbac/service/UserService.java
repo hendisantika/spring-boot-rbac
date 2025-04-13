@@ -75,4 +75,15 @@ public class UserService {
         user.addRole(role);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void unassignRoleFromUser(String username, String roleName) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.getRoles().remove(role);
+        userRepository.save(user);
+    }
 }
