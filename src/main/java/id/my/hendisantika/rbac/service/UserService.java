@@ -1,11 +1,14 @@
 package id.my.hendisantika.rbac.service;
 
+import id.my.hendisantika.rbac.dto.UserRegistrationDto;
+import id.my.hendisantika.rbac.model.Role;
 import id.my.hendisantika.rbac.model.User;
 import id.my.hendisantika.rbac.repository.RoleRepository;
 import id.my.hendisantika.rbac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,5 +42,25 @@ public class UserService {
 
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Transactional
+    public User registerNewUser(UserRegistrationDto userRegistrationDto) {
+
+        // Check if username already exist
+        if (userRepository.existsByUsername(userRegistrationDto.getUsername())) {
+            throw new RuntimeException("Username is already in use");
+        }
+
+        // Create new user
+        User user = new User();
+        user.setUsername(userRegistrationDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
+
+        // Assign default role (USER)
+        Role userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.addRole(userRole);
+        return userRepository.save(user);
     }
 }
