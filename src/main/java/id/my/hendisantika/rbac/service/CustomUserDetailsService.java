@@ -3,9 +3,13 @@ package id.my.hendisantika.rbac.service;
 import id.my.hendisantika.rbac.model.User;
 import id.my.hendisantika.rbac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,5 +37,19 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 getAuthorities(user.getRoles())
         );
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+
+            for (Permission permission : role.getPermissions()) {
+                authorities.add(new SimpleGrantedAuthority(permission.getName()));
+            }
+        }
+
+        return authorities;
     }
 }
