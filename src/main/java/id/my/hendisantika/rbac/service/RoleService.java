@@ -74,4 +74,9 @@ public class RoleService {
         roleRepository.save(role);
     }
 
+    @Transactional
+    public void updateRole(Role role) {
+        roleRepository.save(role);
+    }
+
 }
