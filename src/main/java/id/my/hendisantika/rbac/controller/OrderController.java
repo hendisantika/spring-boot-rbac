@@ -2,6 +2,7 @@ package id.my.hendisantika.rbac.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,12 @@ public class OrderController {
     public ResponseEntity<?> updateOrder(@PathVariable Long id, @RequestBody Object orderDto) {
         // Implementation would go here
         return ResponseEntity.ok("Order updated successfully - Requires 'order:write' permission");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('order:delete')")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        // Implementation would go here
+        return ResponseEntity.ok("Order deleted successfully - Requires 'order:delete' permission");
     }
 }
