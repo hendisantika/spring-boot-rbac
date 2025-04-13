@@ -63,4 +63,15 @@ public class RoleService {
         roleRepository.save(role);
     }
 
+    @Transactional
+    public void unassignPermissionFromRole(String roleName, String permissionName) {
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role with name " + roleName + " does not exist"));
+        Permission permission = permissionRepository.findByName(permissionName)
+                .orElseThrow(() -> new RuntimeException("Permission with name " + permissionName + " does not exist"));
+
+        role.getPermissions().remove(permission);
+        roleRepository.save(role);
+    }
+
 }
