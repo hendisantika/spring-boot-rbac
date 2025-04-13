@@ -1,8 +1,15 @@
 package id.my.hendisantika.rbac.controller;
 
+import id.my.hendisantika.rbac.dto.UserRegistrationDto;
+import id.my.hendisantika.rbac.model.User;
 import id.my.hendisantika.rbac.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,4 +31,13 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
+        try {
+            User user = userService.registerNewUser(registrationDto);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
