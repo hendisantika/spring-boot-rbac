@@ -1,5 +1,6 @@
 package id.my.hendisantika.rbac.service;
 
+import id.my.hendisantika.rbac.model.Permission;
 import id.my.hendisantika.rbac.model.Role;
 import id.my.hendisantika.rbac.repository.PermissionRepository;
 import id.my.hendisantika.rbac.repository.RoleRepository;
@@ -50,4 +51,16 @@ public class RoleService {
         role.setName(name);
         return roleRepository.save(role);
     }
+
+    @Transactional
+    public void assignPermissionToRole(String roleName, String permissionName) {
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role with name " + roleName + " does not exist"));
+        Permission permission = permissionRepository.findByName(permissionName)
+                .orElseThrow(() -> new RuntimeException("Permission with name " + permissionName + " does not exist"));
+
+        role.addPermission(permission);
+        roleRepository.save(role);
+    }
+
 }
