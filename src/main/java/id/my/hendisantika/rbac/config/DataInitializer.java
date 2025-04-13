@@ -6,10 +6,9 @@ import id.my.hendisantika.rbac.model.User;
 import id.my.hendisantika.rbac.repository.PermissionRepository;
 import id.my.hendisantika.rbac.repository.RoleRepository;
 import id.my.hendisantika.rbac.repository.UserRepository;
-import id.my.hendisantika.rbac.service.UserService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -29,15 +28,14 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DataInitializer implements CommandLineRunner {
-    private final UserService userService;
+public class DataInitializer {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void run(String... args) throws Exception {
+    @PostConstruct
+    public void initData() {
         // Create permissions
         Permission readUser = new Permission();
         readUser.setName("user:read");
