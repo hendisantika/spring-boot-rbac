@@ -91,4 +91,9 @@ public class UserService {
     public void updateUser(User user) {
         userRepository.save(user);
     }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
