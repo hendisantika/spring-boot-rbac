@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +35,12 @@ public class OrderController {
     public ResponseEntity<?> getOrderById(@PathVariable Long id) {
         // Implementation would go here
         return ResponseEntity.ok("Order details for ID: " + id + " - Requires 'order:read' permission");
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("hasAuthority('order:write')")
+    public ResponseEntity<?> createOrder(@RequestBody Object orderDto) {
+        // Implementation would go here
+        return ResponseEntity.ok("Order created successfully - Requires 'order:write' permission");
     }
 }
