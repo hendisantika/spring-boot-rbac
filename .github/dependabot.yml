@@ -1,0 +1,75 @@
+version: 2
+
+updates:
+  # Maven dependencies (pom.xml)
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+      include: scope
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot*"
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+      maven-minor-patch:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.springframework*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Spring Boot 4 is a major migration; handle manually
+      - dependency-name: "org.springframework.boot:spring-boot-starter-parent"
+        update-types: [ "version-update:semver-major" ]
+
+  # GitHub Actions used in workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "ci(deps)"
+      include: scope
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Docker images referenced in compose.yaml
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(deps)"
+      include: scope
